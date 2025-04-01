@@ -26,5 +26,13 @@
         </div>
       </form>
       {% endif %}
+      <div>
+        {% for comment in post.comment_set.all %}
+          <li>
+            {{comment.user}} : {{comment.content}}
+          </li>
+        {% endfor %}
+
+      </div>
     </div>
   </div>
