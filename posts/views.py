@@ -41,3 +41,19 @@ def comment_create(request, post_id):
         comment.post_id = post_id
         comment.save()
         return redirect('posts:index')
+
+@login_required
+def like(request, post_id):
+    user = request.user
+    post = Post.objects.get(id=post_id)
+
+    # if post in user.like_posts.all():
+    if user in post.like_users.all(): # 이 게시물에 좋아요 버튼을 누른 사람들의 목록이 생성.(누른 상태)
+        # user.like_posts.remove(post)
+        post.like_users.remove(user)
+        
+    else: # (안 누른 상태)
+        # user.like_posts.add(post) / user 부터 시작하냐 post 부터 시작하냐의 차이 
+        post.like_users.add(user)
+
+    return redirect('posts:index')
