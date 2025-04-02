@@ -14,6 +14,7 @@ def index(request):
     }
 
     return render(request, 'index.html', context)
+    
 @login_required
 def create(request):
     if request.method == 'POST':
@@ -68,3 +69,22 @@ def feed(request):
         'form': form,
     }
     return render(request, 'index.html', context)
+
+from django.http import JsonResponse 
+def like_async(request, id):
+    user =  request.user
+    post = Post.objects.get(id=id)
+
+    if user in post.like_users.all():
+        post.like_users.remove(user)
+        status = False
+    else:
+        post.like_users.add(user)
+        status = True
+
+    context = {
+        'post_id': id,
+        'status': status,
+        'count': len(post.like_users.all())
+    }
+    return JsonResponse(context)
